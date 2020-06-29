@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -94,6 +95,11 @@ public class ComposeActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 tvCharCount.setText(etCompose.getText().toString().length() + "/" + MAX_TWEET_LENGTH);
+                if (etCompose.getText().toString().length() > MAX_TWEET_LENGTH) {
+                    tvCharCount.setTextColor(getResources().getColor(R.color.RED));
+                } else {
+                    tvCharCount.setTextColor(getResources().getColor(R.color.BLACK));
+                }
             }
 
             @Override
