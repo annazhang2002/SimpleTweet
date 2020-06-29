@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -26,6 +29,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText etCompose;
     Button btnTweet;
+    TextView tvCharCount;
 
     TwitterClient client;
 
@@ -36,6 +40,10 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        tvCharCount = findViewById(R.id.tvCharCount);
+
+        tvCharCount.setText("0/" + MAX_TWEET_LENGTH);
+
 
         client = TwitterApp.getRestClient(this);
 
@@ -75,6 +83,22 @@ public class ComposeActivity extends AppCompatActivity {
                         Log.e(TAG, "onFailure to publish tweet", throwable);
                     }
                 });
+            }
+        });
+
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                tvCharCount.setText(etCompose.getText().toString().length() + "/" + MAX_TWEET_LENGTH);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                tvCharCount.setText(etCompose.getText().toString().length() + "/" + MAX_TWEET_LENGTH);
             }
         });
 
