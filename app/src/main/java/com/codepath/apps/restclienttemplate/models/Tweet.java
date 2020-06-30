@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.nfc.Tag;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -19,9 +20,12 @@ import java.util.Locale;
 @Parcel
 public class Tweet {
 
+    public static final String TAG = "Tweet";
+
     public String body;
     public  String createdAt;
     public User user;
+    public String mediaUrl1;
 
     public Tweet() {}
 
@@ -30,6 +34,13 @@ public class Tweet {
         tweet.body = object.getString("text");
         tweet.createdAt = getRelativeTimeAgo( object.getString("created_at"));
         tweet.user = User.fromJson(object.getJSONObject("user"));
+        JSONObject entities = object.getJSONObject("entities");
+        if (entities.has("media")) {
+            JSONArray media = entities.getJSONArray("media");
+            Log.i(TAG, "Media: " + media);
+            tweet.mediaUrl1 = media.getJSONObject(0).getString("media_url_https");
+            Log.i(TAG, "media URL: " + tweet.mediaUrl1);
+        }
         return tweet;
     }
 

@@ -55,4 +55,14 @@
         android:layout_marginTop="6dp"
         android:layout_toEndOf="@+id/tvScreenName"
         tools:text="8m" />
+
+    <ImageView
+        android:id="@+id/ivImgMedia1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfileImg"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/ivProfileImg"
+        tools:srcCompat="@tools:sample/avatars" />
 </RelativeLayout>
