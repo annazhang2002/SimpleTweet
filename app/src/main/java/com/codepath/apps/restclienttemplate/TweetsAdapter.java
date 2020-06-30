@@ -1,6 +1,8 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -47,7 +51,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return tweets.size();
     }
     // define viewholder
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
 
         ImageView ivProfileImg;
         TextView tvBody;
@@ -66,6 +70,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivImgMedia1 = itemView.findViewById(R.id.ivImgMedia1);
 
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Tweet tweet) {
@@ -73,12 +78,32 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName.setText("@" + tweet.user.screenName);
             Glide.with(context).load(tweet.user.publicImageUrl).circleCrop().into(ivProfileImg);
             tvName.setText(tweet.user.name);
-            tvTimestamp.setText(tweet.createdAt);
+            tvTimestamp.setText(tweet.timeAgo);
             if (tweet.mediaUrl1 != null){
                 Glide.with(context).load(tweet.mediaUrl1).into(ivImgMedia1);
                 ivImgMedia1.setVisibility(View.VISIBLE);
             } else {
                 ivImgMedia1.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.i("TweetsAdapter", "onClick");
+
+            int position = getAdapterPosition();
+
+            // making sure the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                Tweet tweet = tweets.get(position);
+
+                // creating a new intent to go to the new activity
+                Intent intent = new Intent(context, TweetDetailsActivity.class);
+
+                // pass information to the intent with the parceler
+                intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+
+                context.startActivity(intent);
             }
         }
     }
