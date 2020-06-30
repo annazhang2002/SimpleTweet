@@ -30,6 +30,8 @@ public class Tweet {
     public User user;
     public String mediaUrl1;
     public long id;
+    public boolean liked;
+    public boolean retweeted;
 
     public Tweet() {}
 
@@ -39,6 +41,8 @@ public class Tweet {
         tweet.createdAt = getSimpleDate(object.getString("created_at"));
         tweet.timeAgo = getRelativeTimeAgo(object.getString("created_at"));
         tweet.user = User.fromJson(object.getJSONObject("user"));
+        tweet.liked = object.getBoolean("favorited");
+        tweet.retweeted = object.getBoolean("retweeted");
         JSONObject entities = object.getJSONObject("entities");
         if (entities.has("media")) {
             JSONArray media = entities.getJSONArray("media");
