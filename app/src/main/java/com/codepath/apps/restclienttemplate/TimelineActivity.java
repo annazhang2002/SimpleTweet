@@ -87,11 +87,13 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     tweets.clear();
                     tweets.addAll(Tweet.fromJsonArray(array));
+                    hideProgressBar();
                     swipeContainer.setRefreshing(false);
                     Log.d(TAG, "all tweets: " + tweets.toString());
 
 
                     adapter.notifyDataSetChanged();
+
                 } catch (JSONException e) {
                     Log.d(TAG, "JSON exception: populateHomeTimeline", e);
 
@@ -111,6 +113,7 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        showProgressBar();
         return super.onPrepareOptionsMenu(menu);
     }
 
