@@ -41,6 +41,7 @@ public class TimelineActivity extends AppCompatActivity {
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
+    Integer lowestId;
 
 
     @Override
@@ -54,7 +55,11 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
 
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        lowestId = 0;
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        rvTweets.setLayoutManager(layoutManager);
         rvTweets.setAdapter(adapter);
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -65,6 +70,7 @@ public class TimelineActivity extends AppCompatActivity {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
+                tweets.clear();
                 populateHomeTimeline();
             }
         });
@@ -75,6 +81,54 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_red_light);
 
         populateHomeTimeline();
+
+        rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore: " + tweets.get(tweets.size()-1).id);
+                Log.i(TAG, "page: " + page);
+                updateHomeTimeline(tweets.get(tweets.size()-1).id);
+            }
+        });
+    }
+
+    private void updateHomeTimeline(long max_id) {
+        client.updateHomeTimeline( max_id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.d(TAG, "onSuccess updateHomeTimeline");
+                JSONArray array = json.jsonArray;
+                try {
+                    tweets.addAll(Tweet.fromJsonArray(array));
+                    hideProgressBar();
+                    swipeContainer.setRefreshing(false);
+                    Log.d(TAG, "all tweets: " + tweets.toString());
+
+//                    Integer lowestLocal = 0;
+//                    for (int i = 0; i < tweets.size(); i++) {
+//                        Log.i(TAG, "id is for the tweet " + i + ": " + tweets.get(i).id);
+//                        if (tweets.get(i).id < lowestLocal) {
+//                            lowestLocal = tweets.get(i).id;
+//                        }
+//                    }
+//                    lowestId = tweets.get(tweets.size()-1).id;
+//                    Log.i(TAG, "lowestID is  " +  lowestId);
+
+                    adapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    Log.d(TAG, "JSON exception: updateHomeTimeline", e);
+
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG, "onFailure updateHomeTimeline" + throwable + " response: "+ response + " statusCode: " + statusCode);
+
+            }
+        });
     }
 
 
@@ -85,12 +139,20 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.d(TAG, "onSuccess populateHomeTimeline");
                 JSONArray array = json.jsonArray;
                 try {
-                    tweets.clear();
                     tweets.addAll(Tweet.fromJsonArray(array));
                     hideProgressBar();
                     swipeContainer.setRefreshing(false);
                     Log.d(TAG, "all tweets: " + tweets.toString());
 
+//                    Integer lowestLocal = 0;
+//                    for (int i = 0; i < tweets.size(); i++) {
+//                        Log.i(TAG, "id is for the tweet " + i + ": " + tweets.get(i).id);
+//                        if (tweets.get(i).id < lowestLocal) {
+//                            lowestLocal = tweets.get(i).id;
+//                        }
+//                    }
+//                    lowestId = tweets.get(tweets.size()-1).id;
+//                    Log.i(TAG, "lowestID is  " +  lowestId);
 
                     adapter.notifyDataSetChanged();
 
@@ -103,7 +165,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.d(TAG, "onFailure populateHomeTimeline", throwable);
+                Log.d(TAG, "onFailure populateHomeTimeline" + throwable + " response: "+ response + " statusCode: " + statusCode);
 
             }
         });

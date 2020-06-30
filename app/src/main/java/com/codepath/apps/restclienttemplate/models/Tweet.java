@@ -26,6 +26,7 @@ public class Tweet {
     public  String createdAt;
     public User user;
     public String mediaUrl1;
+    public long id;
 
     public Tweet() {}
 
@@ -41,6 +42,7 @@ public class Tweet {
             tweet.mediaUrl1 = media.getJSONObject(0).getString("media_url_https");
             Log.i(TAG, "media URL: " + tweet.mediaUrl1);
         }
+        tweet.id = object.getLong("id");
         return tweet;
     }
 
