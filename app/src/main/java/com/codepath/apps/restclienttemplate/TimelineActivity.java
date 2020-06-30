@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
+    private SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -52,18 +54,37 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
-        populateHomeTimeilne();
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                populateHomeTimeline();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        populateHomeTimeline();
     }
 
-    private void populateHomeTimeilne() {
+
+    private void populateHomeTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.d(TAG, "onSuccess populateHomeTimeline");
                 JSONArray array = json.jsonArray;
                 try {
-
+                    tweets.clear();
                     tweets.addAll(Tweet.fromJsonArray(array));
+                    swipeContainer.setRefreshing(false);
                     Log.d(TAG, "all tweets: " + tweets.toString());
 
 
@@ -113,5 +134,19 @@ public class TimelineActivity extends AppCompatActivity {
             rvTweets.smoothScrollToPosition(0);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /* Within the RecyclerView.Adapter class */
+
+    // Clean all elements of the recycler
+    public void clear() {
+        tweets.clear();
+        adapter.notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Tweet> list) {
+        tweets.addAll(list);
+        adapter.notifyDataSetChanged();
     }
 }
