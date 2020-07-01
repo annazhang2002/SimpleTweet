@@ -36,7 +36,9 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="7dp"
         android:layout_toEndOf="@+id/ivProfileImg"
-        tools:text="Just had a yummy slice of pizza" />
+        tools:text="Just had a yummy slice of pizza"
+        android:autoLink="all"
+        android:linksClickable="true"/>
 
     <TextView
         android:id="@+id/tvName"
