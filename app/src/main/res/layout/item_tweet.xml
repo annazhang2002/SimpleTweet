@@ -10,12 +10,12 @@
 
     <ImageView
         android:id="@+id/ivProfileImg"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="65dp"
+        android:layout_height="67dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -23,8 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/tvName"
         tools:text="annazhang20021" />
 
@@ -33,21 +33,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="7dp"
         android:layout_toEndOf="@+id/ivProfileImg"
-        tools:text="Just had a yummy slice of pizza"
         android:autoLink="all"
-        android:linksClickable="true"/>
+        android:linksClickable="true"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        tools:text="Just had a yummy slice of pizza" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="6dp"
         android:layout_toEndOf="@+id/ivProfileImg"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
         tools:text="Anna Zhang" />
 
     <TextView
@@ -56,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="7dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/tvScreenName"
         tools:text="8m" />
 
@@ -65,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBody"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="9dp"
         android:layout_toEndOf="@+id/ivProfileImg"
         tools:srcCompat="@tools:sample/avatars" />
@@ -78,11 +84,13 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivProfileImg"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <ImageView
             android:id="@+id/ivReply"
-            android:layout_width="40dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_weight="1"

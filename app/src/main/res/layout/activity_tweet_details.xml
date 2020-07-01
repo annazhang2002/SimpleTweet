@@ -12,8 +12,8 @@
         android:layout_height="64dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -22,8 +22,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="9dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/ivProfileImg"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold"
         tools:text="Anna Zhang" />
 
     <TextView
@@ -44,9 +48,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="14dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="start every day with a smile; it makes your whole day better. and chances are, it will brighten up someone else's as well" />
 
@@ -56,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMedia1"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="11dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:autoLink="all"
         tools:text="2:36 PM · Jun 30, 2020" />
@@ -65,12 +69,14 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_below="@id/tvTimeStamp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="12dp"
+        android:background="@drawable/border"
+        android:orientation="horizontal"
+        android:padding="3dp">
 
         <ImageView
             android:id="@+id/ivReply"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_weight="1"
@@ -117,9 +123,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBody"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="5dp"
         tools:srcCompat="@tools:sample/avatars" />
 </RelativeLayout>
