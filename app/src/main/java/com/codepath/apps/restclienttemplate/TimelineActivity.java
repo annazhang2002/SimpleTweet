@@ -31,15 +31,13 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     private static final int REQUEST_CODE = 20;
 
     TwitterClient client;
-    String userID;
+    public static String userID;
 
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
-    Integer lowestId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +171,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         });
     }
 
-    private void showEditDialog() {
+    public void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
         ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(this, userID);
         composeDialogFragment.show(fm, "fragment_compose");

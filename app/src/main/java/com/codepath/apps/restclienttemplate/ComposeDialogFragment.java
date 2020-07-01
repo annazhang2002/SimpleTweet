@@ -36,12 +36,14 @@ public class ComposeDialogFragment extends DialogFragment {
     public static final String TAG = "ComposeDialogFragment";
     public static final int MAX_TWEET_LENGTH = 140;
     private static Context context1;
+    public static boolean reply;
 
     EditText etCompose;
     Button btnTweet;
     TextView tvCharCount;
     ImageView ivClose;
     ImageView ivProfileImg;
+    TextView tvReply;
 
     TwitterClient client;
 
@@ -57,6 +59,18 @@ public class ComposeDialogFragment extends DialogFragment {
         args.putString("profileUrl", profileUrl);
         frag.setArguments(args);
         context1 = context;
+        reply = false;
+        return frag;
+    }
+
+    public static ComposeDialogFragment newInstanceReply(Context context, String profileUrl, Tweet tweet) {
+        ComposeDialogFragment frag = new ComposeDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("profileUrl", profileUrl);
+        args.putParcelable("tweet", Parcels.wrap(tweet));
+        frag.setArguments(args);
+        context1 = context;
+        reply = true;
         return frag;
     }
 
@@ -88,8 +102,20 @@ public class ComposeDialogFragment extends DialogFragment {
         tvCharCount = view.findViewById(R.id.tvCharCount);
         ivClose = view.findViewById(R.id.ivClose);
         ivProfileImg = view.findViewById(R.id.ivProfileImg);
+        tvReply = view.findViewById(R.id.tvReply);
 
         tvCharCount.setText("0/" + MAX_TWEET_LENGTH);
+        Tweet tweetSetter = null;
+
+        if (reply) {
+            tweetSetter = (Tweet) Parcels.unwrap(getArguments().getParcelable("tweet"));
+            tvReply.setText("Replying to @" + tweetSetter.user.screenName);
+            etCompose.setText("@" + tweetSetter.user.screenName+ " ");
+        }
+
+        final Tweet tweet = tweetSetter;
+
+
 
         String profileUrl = getArguments().getString("profileUrl", "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png");
         Glide.with(context1).load(profileUrl).circleCrop().into(ivProfileImg);
@@ -108,6 +134,7 @@ public class ComposeDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 final String tweetContent = etCompose.getText().toString();
+                final long tweetId = tweet.id;
                 if (tweetContent.isEmpty()) {
                     Toast.makeText(context1, "Sorry, your tweet cannot be empty", Toast.LENGTH_LONG).show();
                     return;
@@ -118,28 +145,56 @@ public class ComposeDialogFragment extends DialogFragment {
 
                 }
 
-                client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Headers headers, JSON json) {
-                        Log.i(TAG, "onSuccess to publish tweet");
-                        try {
-                            Tweet tweet = Tweet.fromJson(json.jsonObject);
-                            Log.i(TAG, "Published tweet: " + tweet.body);
+                if (reply) {
+                    client.replyToTweet(tweetContent, tweetId, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "onSuccess to reply to tweet");
+                            try {
+                                Tweet tweet = Tweet.fromJson(json.jsonObject);
+                                Log.i(TAG, "Published reply tweet: " + tweet.body);
 //                            Intent intent = new Intent();
 //                            intent.putExtra("tweet", Parcels.wrap(tweet));
-                            Toast.makeText(context1, "Tweeted!" , Toast.LENGTH_LONG).show();
-                            sendBackResult(tweet);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                Toast.makeText(context1, "Tweeted!!" , Toast.LENGTH_LONG).show();
+                                dismiss();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
 
-                    }
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "onFailure to publish reply tweet, response: " + response + " \nstatus code: " + statusCode, throwable);
+                        }
+                    });
 
-                    @Override
-                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.e(TAG, "onFailure to publish tweet", throwable);
-                    }
-                });
+                } else {
+                    client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "onSuccess to publish tweet");
+                            try {
+                                Tweet tweet = Tweet.fromJson(json.jsonObject);
+                                Log.i(TAG, "Published tweet: " + tweet.body);
+//                            Intent intent = new Intent();
+//                            intent.putExtra("tweet", Parcels.wrap(tweet));
+                                Toast.makeText(context1, "Tweeted!" , Toast.LENGTH_LONG).show();
+                                sendBackResult(tweet);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "onFailure to publish tweet", throwable);
+                        }
+                    });
+                }
+
+
             }
         });
 

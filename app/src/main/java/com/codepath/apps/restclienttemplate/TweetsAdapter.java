@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -29,7 +30,7 @@ import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_retweet_
 import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_retweet_stroke_green;
 
 
-public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
+public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> implements ComposeDialogFragment.EditNameDialogListener {
 
     Context context;
     List<Tweet> tweets;
@@ -60,6 +61,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public int getItemCount() {
         return tweets.size();
     }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+
+    }
+
+//    private void showEditDialog() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(this, userID);
+//        composeDialogFragment.show(fm, "fragment_compose");
+//    }
+
     // define viewholder
     public class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
 
@@ -73,6 +86,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivRetweet;
         TextView tvLikeCount;
         TextView tvRetweetCount;
+        ImageView ivReply;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +101,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivRetweet = itemView.findViewById(R.id.ivRetweet);
             tvLikeCount =itemView.findViewById(R.id.tvLikeCount);
             tvRetweetCount =itemView.findViewById(R.id.tvRetweetCount);
+            ivReply = itemView.findViewById(R.id.ivReply);
 
             itemView.setOnClickListener(this);
 
@@ -127,6 +142,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             tvLikeCount.setText(tweet.likeCount + "");
             tvRetweetCount.setText(tweet.retweetCount + "");
+
+
+
+            ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("TweetsAdapter", "onClick ivReply");
+                    TimelineActivity activity = (TimelineActivity) (context);
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    ComposeDialogFragment alertDialog = ComposeDialogFragment.newInstanceReply(context, TimelineActivity.userID, tweet);
+                    alertDialog.show(fm, "fragment_alert");
+                }
+            });
 
             ivLike.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -209,6 +237,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     }
                     Log.i("TweetsAdapter", "here");
                 }
+
             });
         }
 
