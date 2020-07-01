@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTweetDetailsBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -45,23 +46,26 @@ public class TweetDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tweet_details);
+
+        ActivityTweetDetailsBinding binding = ActivityTweetDetailsBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         client = TwitterApp.getRestClient(this);
         context = this;
 
-        ivProfileImg = findViewById(R.id.ivProfileImg);
-        tvName = findViewById(R.id.tvName);
-        tvScreenName = findViewById(R.id.tvScreenName);
-        tvBody = findViewById(R.id.tvBody);
-        tvTimeStamp = findViewById(R.id.tvTimeStamp);
-        ivImgMedia1 = findViewById(R.id.ivMedia1);
+        ivProfileImg = binding.ivProfileImg;
+        tvName = binding.tvName;
+        tvScreenName = binding.tvScreenName;
+        tvBody = binding.tvBody;
+        tvTimeStamp = binding.tvTimeStamp;
+        ivImgMedia1 = binding.ivMedia1;
 
-        ivLike = findViewById(R.id.ivLike);
-        ivRetweet = findViewById(R.id.ivRetweet);
-        tvLikeCount = findViewById(R.id.tvLikeCount);
-        tvRetweetCount = findViewById(R.id.tvRetweetCount);
-        ivReply = findViewById(R.id.ivReply);
+        ivLike = binding.ivLike;
+        ivRetweet = binding.ivRetweet;
+        tvLikeCount = binding.tvLikeCount;
+        tvRetweetCount = binding.tvRetweetCount;
+        ivReply = binding.ivReply;
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
