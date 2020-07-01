@@ -14,16 +14,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
 
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Headers;
+
+import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_heart;
+import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_heart_stroke;
+import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_retweet_stroke;
+import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_retweet_stroke_green;
 
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     Context context;
     List<Tweet> tweets;
+    TwitterClient client;
 
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;
@@ -59,6 +69,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvName;
         TextView tvTimestamp;
         ImageView ivImgMedia1;
+        ImageView ivLike;
+        ImageView ivRetweet;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,22 +81,123 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvName = itemView.findViewById(R.id.tvName);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivImgMedia1 = itemView.findViewById(R.id.ivImgMedia1);
+            ivLike = itemView.findViewById(R.id.ivLike);
+            ivRetweet = itemView.findViewById(R.id.ivRetweet);
 
             itemView.setOnClickListener(this);
+
+            client = new TwitterClient(context);
         }
 
-        public void bind(Tweet tweet) {
+        public void bind(final Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText("@" + tweet.user.screenName);
             Glide.with(context).load(tweet.user.publicImageUrl).circleCrop().into(ivProfileImg);
             tvName.setText(tweet.user.name);
             tvTimestamp.setText(tweet.timeAgo);
             if (tweet.mediaUrl1 != null){
-                Glide.with(context).load(tweet.mediaUrl1).into(ivImgMedia1);
+                Glide.with(context)
+                        .load(tweet.mediaUrl1)
+                        .override(600, 400).
+                        transform(new RoundedCornersTransformation(30, 0)).
+                        into(ivImgMedia1);
                 ivImgMedia1.setVisibility(View.VISIBLE);
             } else {
+                Glide.with(context).load(tweet.mediaUrl1).override(0, 0).into(ivImgMedia1);
                 ivImgMedia1.setVisibility(View.INVISIBLE);
             }
+
+
+
+            if (tweet.liked) {
+                Glide.with(context).load(ic_vector_heart).into(ivLike);
+            } else {
+                Glide.with(context).load(ic_vector_heart_stroke).into(ivLike);
+            }
+
+            if (tweet.retweeted) {
+                Glide.with(context).load(ic_vector_retweet_stroke_green).into(ivRetweet);
+            } else {
+                Glide.with(context).load(ic_vector_retweet_stroke).into(ivRetweet);
+            }
+
+            ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (tweet.liked) {
+                        client.unlikeTweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("TweetDetailsActivity", "unliked");
+                                Glide.with(context).load(ic_vector_heart_stroke).into(ivLike);
+                                tweet.liked = false;
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("TweetDetailsActivity", "failed to unlike", throwable);
+
+                            }
+                        });
+                    } else {
+                        client.likeTweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("TweetDetailsActivity", "liked!!");
+                                Glide.with(context).load(ic_vector_heart).into(ivLike);
+                                tweet.liked = true;
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("TweetDetailsActivity", "failed to like", throwable);
+
+                            }
+                        });
+                    }
+
+                }
+            });
+
+            ivRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (tweet.retweeted) {
+                        client.unretweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("TweetDetailsActivity", "unretweeted");
+                                Glide.with(context).load(ic_vector_retweet_stroke).into(ivRetweet);
+                                tweet.retweeted = false;
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("TweetDetailsActivity", "failed to unretweet", throwable);
+
+                            }
+                        });
+                    } else {
+                        client.retweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("TweetDetailsActivity", "retweeted!!");
+                                Glide.with(context).load(ic_vector_retweet_stroke_green).into(ivRetweet);
+                                tweet.retweeted = true;
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("TweetDetailsActivity", "failed to retweet", throwable);
+
+                            }
+                        });
+                    }
+
+                }
+            });
         }
 
         @Override
@@ -106,5 +219,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 context.startActivity(intent);
             }
         }
+
     }
 }

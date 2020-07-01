@@ -85,7 +85,7 @@ public class Tweet {
             long dateMillis = sf.parse(rawJsonDate).getTime();
 
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString();
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE ).toString();
         } catch (ParseException e) {
             Log.e("Tweet", "gelRelativeTimeAgo", e);
             e.printStackTrace();
