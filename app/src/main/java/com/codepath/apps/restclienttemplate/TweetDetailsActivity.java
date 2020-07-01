@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Headers;
 
 import static com.codepath.apps.restclienttemplate.R.drawable.*;
@@ -29,6 +31,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
     TextView tvScreenName;
     TextView tvBody;
     TextView tvTimeStamp;
+    ImageView ivImgMedia1;
 
     ImageView ivLike;
     ImageView ivRetweet;
@@ -48,6 +51,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvScreenName = findViewById(R.id.tvScreenName);
         tvBody = findViewById(R.id.tvBody);
         tvTimeStamp = findViewById(R.id.tvTimeStamp);
+        ivImgMedia1 = findViewById(R.id.ivMedia1);
 
         ivLike = findViewById(R.id.ivLike);
         ivRetweet = findViewById(R.id.ivRetweet);
@@ -59,6 +63,18 @@ public class TweetDetailsActivity extends AppCompatActivity {
         Glide.with(this).load(tweet.user.publicImageUrl).circleCrop().into(ivProfileImg);
         tvName.setText(tweet.user.name);
         tvTimeStamp.setText(tweet.createdAt);
+
+        if (tweet.mediaUrl1 != null){
+            Glide.with(context)
+                    .load(tweet.mediaUrl1)
+                    .override(600, 400).
+                    transform(new RoundedCornersTransformation(30, 0)).
+                    into(ivImgMedia1);
+            ivImgMedia1.setVisibility(View.VISIBLE);
+        } else {
+            Glide.with(context).load(tweet.mediaUrl1).override(0, 0).into(ivImgMedia1);
+            ivImgMedia1.setVisibility(View.INVISIBLE);
+        }
 
         if (tweet.liked) {
             Glide.with(context).load(ic_vector_heart).into(ivLike);

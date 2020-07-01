@@ -57,7 +57,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/border"
         android:gravity="center"
         android:orientation="horizontal">
@@ -82,9 +82,20 @@
         android:id="@+id/tvTimeStamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBody"
+        android:layout_below="@+id/ivMedia1"
         android:layout_alignParentStart="true"
         android:layout_marginStart="11dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
+        android:autoLink="all"
         tools:text="2:36 PM · Jun 30, 2020" />
+
+    <ImageView
+        android:id="@+id/ivMedia1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="5dp"
+        tools:srcCompat="@tools:sample/avatars" />
 </RelativeLayout>
