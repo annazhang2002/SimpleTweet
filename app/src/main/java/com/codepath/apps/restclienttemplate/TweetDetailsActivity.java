@@ -35,6 +35,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
 
     ImageView ivLike;
     ImageView ivRetweet;
+    TextView tvLikeCount;
+    TextView tvRetweetCount;
 
     Tweet tweet;
 
@@ -55,6 +57,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
 
         ivLike = findViewById(R.id.ivLike);
         ivRetweet = findViewById(R.id.ivRetweet);
+        tvLikeCount = findViewById(R.id.tvLikeCount);
+        tvRetweetCount = findViewById(R.id.tvRetweetCount);
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
@@ -88,6 +92,11 @@ public class TweetDetailsActivity extends AppCompatActivity {
             Glide.with(context).load(ic_vector_retweet_stroke).into(ivRetweet);
         }
 
+
+
+        tvLikeCount.setText(tweet.likeCount + "");
+        tvRetweetCount.setText(tweet.retweetCount + "");
+
         ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +107,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
                             Log.i("TweetDetailsActivity", "unliked");
                             Glide.with(context).load(ic_vector_heart_stroke).into(ivLike);
                             tweet.liked = false;
-
+                            tweet.likeCount -= 1;
+                            tvLikeCount.setText(tweet.likeCount + "");
                         }
 
                         @Override
@@ -114,6 +124,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
                             Log.i("TweetDetailsActivity", "liked!!");
                             Glide.with(context).load(ic_vector_heart).into(ivLike);
                             tweet.liked = true;
+                            tweet.likeCount += 1;
+                            tvLikeCount.setText(tweet.likeCount + "");
                         }
 
                         @Override
@@ -123,7 +135,6 @@ public class TweetDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
-
             }
         });
 
@@ -137,7 +148,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
                             Log.i("TweetDetailsActivity", "unretweeted");
                             Glide.with(context).load(ic_vector_retweet_stroke).into(ivRetweet);
                             tweet.retweeted = false;
-
+                            tweet.retweetCount -= 1;
+                            tvRetweetCount.setText(tweet.retweetCount + "");
                         }
 
                         @Override
@@ -153,6 +165,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
                             Log.i("TweetDetailsActivity", "retweeted!!");
                             Glide.with(context).load(ic_vector_retweet_stroke_green).into(ivRetweet);
                             tweet.retweeted = true;
+                            tweet.retweetCount += 1;
+                            tvRetweetCount.setText(tweet.retweetCount + "");
                         }
 
                         @Override
@@ -162,7 +176,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
-
+                Log.i("TweetsAdapter", "here");
             }
         });
 //        if (tweet.mediaUrl1 != null){

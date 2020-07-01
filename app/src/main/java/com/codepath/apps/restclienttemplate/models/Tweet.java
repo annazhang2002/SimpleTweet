@@ -32,6 +32,9 @@ public class Tweet {
     public long id;
     public boolean liked;
     public boolean retweeted;
+    public int likeCount;
+    public int retweetCount;
+    public int replyCount;
 
     public Tweet() {}
 
@@ -43,6 +46,9 @@ public class Tweet {
         tweet.user = User.fromJson(object.getJSONObject("user"));
         tweet.liked = object.getBoolean("favorited");
         tweet.retweeted = object.getBoolean("retweeted");
+        tweet.likeCount = object.getInt("favorite_count");
+        tweet.retweetCount = object.getInt("retweet_count");
+//        tweet.replyCount = object.getInt("reply_count");
         JSONObject entities = object.getJSONObject("entities");
         if (entities.has("media")) {
             JSONArray media = entities.getJSONArray("media");
