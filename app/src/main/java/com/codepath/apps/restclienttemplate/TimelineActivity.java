@@ -31,6 +31,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     private static final int REQUEST_CODE = 20;
 
     TwitterClient client;
+    String userID;
+
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
@@ -50,7 +52,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
 
-        lowestId = 0;
+        getUserId();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -173,8 +175,28 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(this, "");
+        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(this, userID);
         composeDialogFragment.show(fm, "fragment_compose");
+    }
+
+    public void getUserId() {
+        client.getUserTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.d(TAG, "onSuccess populateHomeTimeline");
+                JSONArray array = json.jsonArray;
+                try {
+                    userID = array.getJSONObject(0).getJSONObject("user").getString("profile_image_url_https");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG, "onFailure getUserId" + throwable + " response: "+ response + " statusCode: " + statusCode);
+            }
+        });
     }
 
     @Override

@@ -54,7 +54,7 @@ public class ComposeDialogFragment extends DialogFragment {
     public static ComposeDialogFragment newInstance(Context context, String profileUrl) {
         ComposeDialogFragment frag = new ComposeDialogFragment();
         Bundle args = new Bundle();
-        args.putString("title", "Compose");
+        args.putString("profileUrl", profileUrl);
         frag.setArguments(args);
         context1 = context;
         return frag;
@@ -90,7 +90,9 @@ public class ComposeDialogFragment extends DialogFragment {
         ivProfileImg = view.findViewById(R.id.ivProfileImg);
 
         tvCharCount.setText("0/" + MAX_TWEET_LENGTH);
-//        Glide.with(context1).load(tweet.user.publicImageUrl).circleCrop().into(ivProfileImg);
+
+        String profileUrl = getArguments().getString("profileUrl", "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png");
+        Glide.with(context1).load(profileUrl).circleCrop().into(ivProfileImg);
 
 
         client = TwitterApp.getRestClient(context1);
@@ -163,9 +165,6 @@ public class ComposeDialogFragment extends DialogFragment {
             }
         });
 
-        // Fetch arguments from bundle and set title
-        String title = getArguments().getString("title", "Enter Name");
-        getDialog().setTitle("hellloooo");
         // Show soft keyboard automatically and request focus to field
         etCompose.requestFocus();
         getDialog().getWindow().setSoftInputMode(

@@ -77,6 +77,15 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, "", handler);
 	}
 
+	// Get the current user's profile picture (may be a bit unconventional method)
+	public void getUserTimeline( JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/user_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("count", 1);
+		client.get(apiUrl, params, handler);
+	}
+
 	// Unlike a tweet
 	public void unlikeTweet(long id, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/destroy.json");
