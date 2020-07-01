@@ -50,13 +50,31 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="start every day with a smile; it makes your whole day better. and chances are, it will brighten up someone else's as well" />
 
+    <TextView
+        android:id="@+id/tvTimeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMedia1"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="5dp"
+        android:autoLink="all"
+        tools:text="2:36 PM · Jun 30, 2020" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/tvTimeStamp"
-        android:layout_marginTop="5dp"
-        android:layout_weight="1"
+        android:layout_height="30dp"
+        android:layout_below="@id/tvTimeStamp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivReply"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/reply_icon" />
 
         <ImageView
             android:id="@+id/ivLike"
@@ -93,17 +111,6 @@
             tools:text="100" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvTimeStamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivMedia1"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="5dp"
-        android:autoLink="all"
-        tools:text="2:36 PM · Jun 30, 2020" />
 
     <ImageView
         android:id="@+id/ivMedia1"

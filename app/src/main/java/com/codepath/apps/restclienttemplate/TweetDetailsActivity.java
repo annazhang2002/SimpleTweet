@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.media.Image;
@@ -37,6 +38,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
     ImageView ivRetweet;
     TextView tvLikeCount;
     TextView tvRetweetCount;
+    ImageView ivReply;
 
     Tweet tweet;
 
@@ -59,6 +61,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         ivRetweet = findViewById(R.id.ivRetweet);
         tvLikeCount = findViewById(R.id.tvLikeCount);
         tvRetweetCount = findViewById(R.id.tvRetweetCount);
+        ivReply = findViewById(R.id.ivReply);
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
@@ -91,6 +94,17 @@ public class TweetDetailsActivity extends AppCompatActivity {
         } else {
             Glide.with(context).load(ic_vector_retweet_stroke).into(ivRetweet);
         }
+
+        ivReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("TweetsDetailsActivity", "onClick ivReply");
+                TweetDetailsActivity activity = (TweetDetailsActivity) (context);
+                FragmentManager fm = activity.getSupportFragmentManager();
+                ComposeDialogFragment alertDialog = ComposeDialogFragment.newInstanceReply(context, TimelineActivity.userID, tweet);
+                alertDialog.show(fm, "fragment_alert");
+            }
+        });
 
 
 
