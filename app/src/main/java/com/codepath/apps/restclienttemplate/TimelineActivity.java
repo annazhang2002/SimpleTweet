@@ -2,24 +2,19 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.TwitterApp;
-import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.github.scribejava.apis.TwitterApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +25,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements ComposeDialogFragment.EditNameDialogListener {
 
     public static final String TAG = "TimelineActivity";
     private static final int REQUEST_CODE = 20;
@@ -70,9 +65,9 @@ public class TimelineActivity extends AppCompatActivity {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                tweets.clear();
-                populateHomeTimeline();
+                refresh();
             }
+
         });
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -90,6 +85,11 @@ public class TimelineActivity extends AppCompatActivity {
                 updateHomeTimeline(tweets.get(tweets.size()-1).id);
             }
         });
+    }
+
+    private void refresh() {
+        tweets.clear();
+        populateHomeTimeline();
     }
 
     private void updateHomeTimeline(long max_id) {
@@ -171,6 +171,17 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(this, "");
+        composeDialogFragment.show(fm, "fragment_compose");
+    }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        refresh();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -192,8 +203,9 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.compose) {
-            Intent intent = new Intent(this, ComposeActivity.class);
-            startActivityForResult(intent, REQUEST_CODE);
+//            Intent intent = new Intent(this, ComposeActivity.class);
+//            startActivityForResult(intent, REQUEST_CODE);
+            showEditDialog();
 
         }
         return super.onOptionsItemSelected(item);
