@@ -57,30 +57,32 @@ The following **additional** features are implemented:
 #### Here are a few walkthroughs highlighting various user stories:
 
 Home Timeline of Tweets (Endless Scroll and Links)
+
 ![Walkthough](timeline.gif)
 
 Tweet Details (Liking and Retweeting)
+
 ![Walkthough](details.gif)
 
 Compose a new tweet and replies
+
 ![Walkthough](compose.gif)
 
 User Profiles
+
 ![Walkthough](user.gif)
 
 Persistence
+
 ![Walkthough](persistence.gif)
 
 Followers and Following
+
 ![Walkthough](userLists.gif)
 
 Login
+
 ![Walkthough](login.gif)
-
-
-
-
-
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
