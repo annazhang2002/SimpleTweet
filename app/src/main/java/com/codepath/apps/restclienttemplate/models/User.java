@@ -12,8 +12,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Parcel
@@ -59,7 +62,7 @@ public class User {
         user.followerCount = object.getInt("followers_count");
         user.followingCount = object.getInt("friends_count");
         user.verified = object.getBoolean("verified");
-        user.createdAt = object.getString("created_at");
+        user.createdAt = getSimpleDate(object.getString("created_at"));
         user.bannerImg = object.getString("profile_banner_url");
         user.location = object.getString("location");
         user.url = object.getString("url");
@@ -75,5 +78,15 @@ public class User {
             users.add(tweetsFromNetwork.get(i).user);
         }
         return users;
+    }
+
+    public static String getSimpleDate(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        String newFormat = "MMM yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.applyPattern(newFormat);
+        String newDate = sf.format(new Date());
+        Log.i("Tweet", "newDate: " + newDate);
+        return newDate;
     }
 }

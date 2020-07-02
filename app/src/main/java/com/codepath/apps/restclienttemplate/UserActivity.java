@@ -60,9 +60,18 @@ public class UserActivity extends AppCompatActivity {
         tvName.setText(user.name);
         tvFollowerCount.setText(user.followerCount + "");
         tvFollowingCount.setText(user.followingCount + "");
-        tvLocation.setText(user.location);
+        if (user.location != null && !user.location.isEmpty()){
+            tvLocation.setText(user.location);
+        } else {
+            tvLocation.setText("N/A");
+        }
         tvCreatedAt.setText(user.createdAt);
-        tvUrl.setText(user.url);
+        Log.i("User", "userurl: "+ user.url);
+        if (user.url != null && !user.url.isEmpty() && !user.url.equals("null")){
+            tvUrl.setText(user.url);
+        } else {
+            tvUrl.setText("N/A");
+        }
         Glide.with(this).load(user.bannerImg).into(ivBanner);
     }
 }
