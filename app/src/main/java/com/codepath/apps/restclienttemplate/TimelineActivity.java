@@ -45,6 +45,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
+    boolean loaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,23 +89,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        // Query for existing tweets
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Showing data from database");
-                List<TweetWithUser> tweetWithUsers = tweetDao.recentItems();
-                Log.i(TAG, "TweetswithUsers: " + tweetWithUsers);
-                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
-                tweets.clear();
-                adapter.notifyDataSetChanged();
-                tweets.addAll(tweetsFromDB);
-                Log.i(TAG, "Tweets from db: " + tweetsFromDB + " and the tweets: " + tweets);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-
+        loaded = false;
         populateHomeTimeline();
 
         rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -123,13 +108,15 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     }
 
     private void updateHomeTimeline(long max_id) {
+        loaded = true;
         client.updateHomeTimeline( max_id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.d(TAG, "onSuccess updateHomeTimeline");
-                JSONArray array = json.jsonArray;
+                final JSONArray array = json.jsonArray;
                 try {
-                    tweets.addAll(Tweet.fromJsonArray(array));
+                    final List<Tweet> tweetsFromNetwork = Tweet.fromJsonArray(array);
+                    tweets.addAll(tweetsFromNetwork);
                     hideProgressBar();
                     swipeContainer.setRefreshing(false);
                     Log.d(TAG, "all tweets: " + tweets.toString());
@@ -143,6 +130,21 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 //                    }
 //                    lowestId = tweets.get(tweets.size()-1).id;
 //                    Log.i(TAG, "lowestID is  " +  lowestId);
+                    // Query for existing tweets
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "Saving data into database");
+
+                            List<User> usersFromNetwork = User.fromJsonTweetArray(tweetsFromNetwork);
+                            tweetDao.insertModel(usersFromNetwork.toArray(new User[0]));
+                            Log.i(TAG, "Users from network: " + usersFromNetwork);
+
+                            tweetDao.insertModel(tweetsFromNetwork.toArray(new Tweet[0]));
+                            Log.i(TAG, "Users from network: " + tweetsFromNetwork);
+
+                        }
+                    });
 
                     adapter.notifyDataSetChanged();
 
@@ -156,13 +158,34 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.d(TAG, "onFailure updateHomeTimeline" + throwable + " response: "+ response + " statusCode: " + statusCode);
+                // Query for existing tweets
+                showFromDatabase();
 
+            }
+        });
+    }
+
+    public void showFromDatabase() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Showing data from database");
+                List<TweetWithUser> tweetWithUsers = tweetDao.recentItems();
+                Log.i(TAG, "TweetswithUsers: " + tweetWithUsers);
+                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
+                tweets.clear();
+                adapter.notifyDataSetChanged();
+                tweets.addAll(tweetsFromDB);
+                Log.i(TAG, "Tweets from db: " + tweetsFromDB + " and the tweets: " + tweets);
+                adapter.notifyDataSetChanged();
+                loaded = true;
             }
         });
     }
 
 
     private void populateHomeTimeline() {
+        loaded = true;
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -206,7 +229,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
                 } catch (JSONException e) {
                     Log.d(TAG, "JSON exception: populateHomeTimeline", e);
-
                     e.printStackTrace();
                 }
             }
@@ -214,6 +236,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.d(TAG, "onFailure populateHomeTimeline" + throwable + " response: "+ response + " statusCode: " + statusCode);
+                showFromDatabase();
+
             }
         });
     }
@@ -222,6 +246,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         FragmentManager fm = getSupportFragmentManager();
         ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(this, userID);
         composeDialogFragment.show(fm, "fragment_compose");
+        hideProgressBar();
     }
 
     public void getUserId() {
@@ -253,17 +278,24 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
-        showProgressBar();
+        Log.i(TAG, "createOptionsMenu");
+        if (loaded) {
+            hideProgressBar();
+        } else {
+            showProgressBar();
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
     public void showProgressBar() {
         // Show progress item
         miActionProgressItem.setVisible(true);
+        Log.i(TAG, "showprogressbar");
     }
 
     public void hideProgressBar() {
         // Hide progress item
+        Log.i(TAG, "Hideprogressbar");
         miActionProgressItem.setVisible(false);
     }
 
