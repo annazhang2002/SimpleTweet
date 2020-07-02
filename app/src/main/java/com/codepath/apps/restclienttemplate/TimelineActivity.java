@@ -192,6 +192,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                 Log.d(TAG, "onSuccess populateHomeTimeline");
                 JSONArray array = json.jsonArray;
                 try {
+                    Log.i(TAG, "jsonarray: " + array);
                     final List<Tweet> tweetsFromNetwork = Tweet.fromJsonArray(array);
                     tweets.addAll(tweetsFromNetwork);
 

@@ -45,6 +45,9 @@ The following **additional** features are implemented:
 * [X] Embedded media images have rounded corners
 * [X] Updated Login screen to better match the design of the rest of the app
 * [X] Added adaptive icon for the app that is the twitter logo
+* [X] Created user profile pages
+    * [X] Can access by tapping user's profile picture on home timeline or details screen
+    * [X] Shows the user's bio, name, profile picture, screen name, banner image, location, website url, date joined, follower count, and following count
 
 ## Video Walkthrough
 

@@ -8,12 +8,14 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -58,17 +60,20 @@ public class User {
         user.publicImageUrl = object.getString("profile_image_url_https");
         user.id = object.getLong("id");
         user.bio = object.getString("description");
-        Log.i("User", "userbio: " + user.bio);
+//        Log.i("User", "userbio: " + user.bio);
         user.followerCount = object.getInt("followers_count");
         user.followingCount = object.getInt("friends_count");
         user.verified = object.getBoolean("verified");
         user.createdAt = getSimpleDate(object.getString("created_at"));
-        user.bannerImg = object.getString("profile_banner_url");
+        if (user.verified){
+            user.bannerImg = object.getString("profile_banner_url");
+        }
         user.location = object.getString("location");
         user.url = object.getString("url");
-        Log.i("User", "followers: " + user.followingCount);
-        Log.i("User", "following: " + user.followerCount);
+//        Log.i("User", "followers: " + user.followingCount);
+//        Log.i("User", "following: " + user.followerCount);
 
+        Log.i("User" , "here's the user: "+ user);
         return user;
     }
 
@@ -88,5 +93,14 @@ public class User {
         String newDate = sf.format(new Date());
         Log.i("Tweet", "newDate: " + newDate);
         return newDate;
+    }
+
+    public static List<User> fromJsonArray(JSONArray array) throws JSONException {
+        List<User> users = new ArrayList<>();
+        for (int i =0; i< array.length(); i++) {
+            users.add(fromJson(array.getJSONObject(i)));
+        }
+
+        return users;
     }
 }

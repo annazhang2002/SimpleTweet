@@ -2,6 +2,9 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,12 +37,16 @@ public class UserActivity extends AppCompatActivity {
 
     User user;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityUserBinding binding = ActivityUserBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        context = this;
 
         ivProfile = binding.ivProfile;
         tvName = binding.tvName;
@@ -62,6 +69,18 @@ public class UserActivity extends AppCompatActivity {
         tvName.setText(user.name);
         tvFollowerCount.setText(user.followerCount + "");
         tvFollowingCount.setText(user.followingCount + "");
+
+        tvFollowerCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FollowersActivity.class);
+                intent.putExtra("user_id", Parcels.wrap(user.id));
+                intent.putExtra("user_type", "followers");
+                context.startActivity(intent);
+            }
+        });
+
+
         if (user.location != null && !user.location.isEmpty()){
             tvLocation.setText(user.location);
         } else {
@@ -74,9 +93,12 @@ public class UserActivity extends AppCompatActivity {
         } else {
             tvUrl.setText("N/A");
         }
-        Glide.with(this).load(user.bannerImg).into(ivBanner);
         if (!user.verified) {
             ivVerified.setVisibility(View.INVISIBLE);
+            ivBanner.setBackgroundColor(getResources().getColor(R.color.gray));
+        } else {
+            Glide.with(this).load(user.bannerImg).into(ivBanner);
+            ivBanner.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 }

@@ -87,6 +87,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvLikeCount;
         TextView tvRetweetCount;
         ImageView ivReply;
+        ImageView ivVerified;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,6 +103,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvLikeCount =itemView.findViewById(R.id.tvLikeCount);
             tvRetweetCount =itemView.findViewById(R.id.tvRetweetCount);
             ivReply = itemView.findViewById(R.id.ivReply);
+            ivVerified = itemView.findViewById(R.id.ivVerified);
 
             itemView.setOnClickListener(this);
 
@@ -138,6 +140,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 Glide.with(context).load(ic_vector_retweet_stroke_green).into(ivRetweet);
             } else {
                 Glide.with(context).load(ic_vector_retweet_stroke).into(ivRetweet);
+            }
+
+            if (tweet.user.verified) {
+                ivVerified.setVisibility(View.VISIBLE);
+            } else {
+                ivVerified.setVisibility(View.INVISIBLE);
             }
 
             tvLikeCount.setText(tweet.likeCount + "");

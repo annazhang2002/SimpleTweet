@@ -134,7 +134,7 @@ public class ComposeDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 final String tweetContent = etCompose.getText().toString();
-                final long tweetId = tweet.id;
+
                 if (tweetContent.isEmpty()) {
                     Toast.makeText(context1, "Sorry, your tweet cannot be empty", Toast.LENGTH_LONG).show();
                     return;
@@ -146,6 +146,7 @@ public class ComposeDialogFragment extends DialogFragment {
                 }
 
                 if (reply) {
+                    long tweetId = tweet.id;
                     client.replyToTweet(tweetContent, tweetId, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -189,7 +190,7 @@ public class ComposeDialogFragment extends DialogFragment {
 
                         @Override
                         public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                            Log.e(TAG, "onFailure to publish tweet", throwable);
+                            Log.e(TAG, "onFailure to publish tweet and the response: " + response, throwable);
                         }
                     });
                 }
