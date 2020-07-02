@@ -52,6 +52,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:autoLink="all"
+        android:linksClickable="true"
         tools:text="start every day with a smile; it makes your whole day better. and chances are, it will brighten up someone else's as well" />
 
     <TextView
