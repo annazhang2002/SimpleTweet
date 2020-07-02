@@ -80,6 +80,16 @@ public class UserActivity extends AppCompatActivity {
             }
         });
 
+        tvFollowingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FollowersActivity.class);
+                intent.putExtra("user_id", Parcels.wrap(user.id));
+                intent.putExtra("user_type", "following");
+                context.startActivity(intent);
+            }
+        });
+
 
         if (user.location != null && !user.location.isEmpty()){
             tvLocation.setText(user.location);

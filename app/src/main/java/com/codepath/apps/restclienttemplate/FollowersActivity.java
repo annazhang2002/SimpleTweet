@@ -65,11 +65,30 @@ public class FollowersActivity extends AppCompatActivity {
                     try {
                         JSONArray array = object.getJSONArray("users");
                         Log.i("FollowerActivity", "users: " + array);
-//                        users.addAll(User.fromJsonArray(array));
-//                        List<User> users = new ArrayList<>();
-                        for (int i =0; i< array.length(); i++) {
-                            users.add(User.fromJson(array.getJSONObject(i)));
-                        }
+                        users.addAll(User.fromJsonArray(array));
+                        Log.i("FollowerActivity", "users: " + users);
+                        adapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        Log.i("FollowerActivity", "bad bad bad");
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    Log.i("FollowersActivity", "onFailure getUserList");
+                }
+            });
+        } else if (userType.equals("following")) {
+            client.getFollowing(userId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    Log.i("FollowersActivity", "onSuccess getFollowing");
+                    JSONObject object = json.jsonObject;
+                    try {
+                        JSONArray array = object.getJSONArray("users");
+                        Log.i("FollowerActivity", "users: " + array);
+                        users.addAll(User.fromJsonArray(array));
                         Log.i("FollowerActivity", "users: " + users);
                         adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
