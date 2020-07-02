@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +17,9 @@ import android.view.View;
 
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetDao;
+import com.codepath.apps.restclienttemplate.models.TweetWithUser;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -33,6 +37,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     private static final int REQUEST_CODE = 20;
 
     TwitterClient client;
+    TweetDao tweetDao;
     public static String userID;
 
     RecyclerView rvTweets;
@@ -51,6 +56,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         setContentView(view);
 
         client = TwitterApp.getRestClient(this);
+        tweetDao = ((TwitterApp) getApplicationContext()).getMyDatabase().tweetDao();
+
 
         rvTweets = binding.rvTweets;
         tweets = new ArrayList<>();
@@ -80,6 +87,23 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        // Query for existing tweets
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Showing data from database");
+                List<TweetWithUser> tweetWithUsers = tweetDao.recentItems();
+                Log.i(TAG, "TweetswithUsers: " + tweetWithUsers);
+                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
+                tweets.clear();
+                adapter.notifyDataSetChanged();
+                tweets.addAll(tweetsFromDB);
+                Log.i(TAG, "Tweets from db: " + tweetsFromDB + " and the tweets: " + tweets);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
 
         populateHomeTimeline();
 
@@ -145,7 +169,25 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                 Log.d(TAG, "onSuccess populateHomeTimeline");
                 JSONArray array = json.jsonArray;
                 try {
-                    tweets.addAll(Tweet.fromJsonArray(array));
+                    final List<Tweet> tweetsFromNetwork = Tweet.fromJsonArray(array);
+                    tweets.addAll(tweetsFromNetwork);
+
+                    // Query for existing tweets
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "Saving data into database");
+
+                            List<User> usersFromNetwork = User.fromJsonTweetArray(tweetsFromNetwork);
+                            tweetDao.insertModel(usersFromNetwork.toArray(new User[0]));
+                            Log.i(TAG, "Users from network: " + usersFromNetwork);
+
+                            tweetDao.insertModel(tweetsFromNetwork.toArray(new Tweet[0]));
+                            Log.i(TAG, "Users from network: " + tweetsFromNetwork);
+
+                        }
+                    });
+
                     hideProgressBar();
                     swipeContainer.setRefreshing(false);
                     Log.d(TAG, "all tweets: " + tweets.toString());
@@ -172,7 +214,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.d(TAG, "onFailure populateHomeTimeline" + throwable + " response: "+ response + " statusCode: " + statusCode);
-
             }
         });
     }

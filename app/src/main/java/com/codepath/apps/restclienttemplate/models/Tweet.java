@@ -4,6 +4,12 @@ import android.nfc.Tag;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.codepath.apps.restclienttemplate.TwitterApp;
 
 import org.json.JSONArray;
@@ -20,20 +26,36 @@ import java.util.List;
 import java.util.Locale;
 
 @Parcel
+@Entity(foreignKeys = @ForeignKey(entity=User.class, parentColumns="id", childColumns="userId"))
 public class Tweet {
+
+    @ColumnInfo
+    @PrimaryKey(autoGenerate=true)
+    public long id;
 
     public static final String TAG = "Tweet";
 
+    @ColumnInfo
     public String body;
+    @ColumnInfo
     public  String createdAt;
+    @ColumnInfo
     public String timeAgo;
+    @ColumnInfo
+    public long userId;
+    @Ignore
     public User user;
+    @ColumnInfo
     public String mediaUrl1;
-    public long id;
+    @ColumnInfo
     public boolean liked;
+    @ColumnInfo
     public boolean retweeted;
+    @ColumnInfo
     public int likeCount;
+    @ColumnInfo
     public int retweetCount;
+    @ColumnInfo
     public int replyCount;
 
     public Tweet() {}
@@ -44,6 +66,7 @@ public class Tweet {
         tweet.createdAt = getSimpleDate(object.getString("created_at"));
         tweet.timeAgo = getRelativeTimeAgo(object.getString("created_at"));
         tweet.user = User.fromJson(object.getJSONObject("user"));
+        tweet.userId = tweet.user.id;
         tweet.liked = object.getBoolean("favorited");
         tweet.retweeted = object.getBoolean("retweeted");
         tweet.likeCount = object.getInt("favorite_count");

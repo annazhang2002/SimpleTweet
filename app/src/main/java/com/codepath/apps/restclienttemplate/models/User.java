@@ -1,14 +1,30 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 @Parcel
 public class User {
 
-    public String name;
+    @ColumnInfo
+    @PrimaryKey(autoGenerate=true)
+    public long id;
+
+    @ColumnInfo
     public String screenName;
+    @ColumnInfo
+    public String name;
+    @ColumnInfo
     public String publicImageUrl;
 
     public User() {}
@@ -18,6 +34,15 @@ public class User {
         user.name = object.getString("name");
         user.screenName = object.getString("screen_name");
         user.publicImageUrl = object.getString("profile_image_url_https");
+        user.id = object.getLong("id");
         return user;
+    }
+
+    public static List<User> fromJsonTweetArray(List<Tweet> tweetsFromNetwork) {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < tweetsFromNetwork.size(); i++) {
+            users.add(tweetsFromNetwork.get(i).user);
+        }
+        return users;
     }
 }
