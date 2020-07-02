@@ -143,7 +143,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvLikeCount.setText(tweet.likeCount + "");
             tvRetweetCount.setText(tweet.retweetCount + "");
 
-
+            ivProfileImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, UserActivity.class);
+                    intent.putExtra("user", Parcels.wrap(tweet.user));
+                    Log.i("TweetDetailsActivity", "userbio: " + tweet.user.bio);
+                    context.startActivity(intent);
+                }
+            });
 
             ivReply.setOnClickListener(new View.OnClickListener() {
                 @Override
