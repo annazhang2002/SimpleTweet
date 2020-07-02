@@ -97,7 +97,7 @@ public class Tweet {
         String newFormat = "h:mm a · MMM dd, yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.applyPattern(newFormat);
-        String newDate = sf.format(new Date());
+        String newDate = sf.format(new Date(rawJsonDate));
         Log.i("Tweet", "newDate: " + newDate);
         return newDate;
     }

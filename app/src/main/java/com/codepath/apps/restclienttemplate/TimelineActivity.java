@@ -211,8 +211,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
                         }
                     });
-
-                    hideProgressBar();
                     swipeContainer.setRefreshing(false);
                     Log.d(TAG, "all tweets: " + tweets.toString());
 
@@ -227,7 +225,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 //                    Log.i(TAG, "lowestID is  " +  lowestId);
 
                     adapter.notifyDataSetChanged();
-
+                    hideProgressBar();
                 } catch (JSONException e) {
                     Log.d(TAG, "JSON exception: populateHomeTimeline", e);
                     e.printStackTrace();
@@ -280,11 +278,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         getMenuInflater().inflate(R.menu.menu_main, menu);
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
         Log.i(TAG, "createOptionsMenu");
-        if (loaded) {
-            hideProgressBar();
-        } else {
-            showProgressBar();
-        }
+        showProgressBar();
+//        if (loaded) {
+//            hideProgressBar();
+//        } else {
+//            showProgressBar();
+//        }
         return super.onPrepareOptionsMenu(menu);
     }
 

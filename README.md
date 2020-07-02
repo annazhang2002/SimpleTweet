@@ -48,12 +48,39 @@ The following **additional** features are implemented:
 * [X] Created user profile pages
     * [X] Can access by tapping user's profile picture on home timeline or details screen
     * [X] Shows the user's bio, name, profile picture, screen name, banner image, location, website url, date joined, follower count, and following count
+    * [X] User can click on follower or following count to open FollowersActivity
+* [X] From the FollowersActivity, users can scroll through a list of all of the users that user follows/following
+* [X] Added verified symbol to home timeline, details screen, user profile, followers list etc.
 
-## Video Walkthrough
+## Video Walkthroughs
 
-Here's a walkthrough of implemented user stories:
+#### Here are a few walkthroughs highlighting various user stories:
 
-![Walkthough](walkthrough.gif)
+Home Timeline of Tweets (Endless Scroll and Links)
+![Walkthough](timeline.gif)
+
+Tweet Details (Liking and Retweeting)
+![Walkthough](details.gif)
+
+Compose a new tweet and replies
+![Walkthough](compose.gif)
+
+User Profiles
+![Walkthough](user.gif)
+
+Persistence
+![Walkthough](persistence.gif)
+
+Followers and Following
+![Walkthough](userLists.gif)
+
+Login
+![Walkthough](login.gif)
+
+
+
+
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
