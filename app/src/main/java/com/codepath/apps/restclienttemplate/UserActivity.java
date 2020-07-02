@@ -30,6 +30,7 @@ public class UserActivity extends AppCompatActivity {
     TextView tvUrl;
     TextView tvCreatedAt;
     ImageView ivBanner;
+    ImageView ivVerified;
 
     User user;
 
@@ -50,6 +51,7 @@ public class UserActivity extends AppCompatActivity {
         tvCreatedAt = binding.tvCreatedAt;
         tvUrl = binding.tvUrl;
         ivBanner = binding.ivBanner;
+        ivVerified = binding.ivVerified;
 
         user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
         Log.i("UserActivity", "user: " + user);
@@ -73,5 +75,8 @@ public class UserActivity extends AppCompatActivity {
             tvUrl.setText("N/A");
         }
         Glide.with(this).load(user.bannerImg).into(ivBanner);
+        if (!user.verified) {
+            ivVerified.setVisibility(View.INVISIBLE);
+        }
     }
 }

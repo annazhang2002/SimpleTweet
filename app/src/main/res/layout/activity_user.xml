@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/tvName"
-        android:layout_width="296dp"
+        android:layout_width="245dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
@@ -45,10 +45,11 @@
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfile"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="@annazhang20021" />
 
     <TextView
@@ -162,8 +163,8 @@
 
     <ImageView
         android:id="@+id/ivLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="36dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -182,12 +183,22 @@
 
     <ImageView
         android:id="@+id/ivCreatedAt"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="28dp"
+        android:layout_width="25dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivUrl"
         app:srcCompat="@drawable/created_at" />
+
+    <ImageView
+        android:id="@+id/ivVerified"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/tvScreenName"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
+        app:srcCompat="@drawable/verified" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
