@@ -88,7 +88,9 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Overall, I had a great time making this app, and I learned a lot about Android App Development. I completed all of the required stories as well as almost all of the stretch stories. I also added on some feature I thought would be interesting like user profiles and verified indications.
+I struggled for a while with the endless scroll feature, specifically identifying the max_id was a long and ensuring there are no repeats. I also struggled with the user profile for a while because some users do not have banner images, which kept crashing the app during the API call.
+
 
 ## Open-source libraries used
 
