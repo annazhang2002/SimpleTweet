@@ -54,6 +54,10 @@ The following **additional** features are implemented:
 
 ## Video Walkthroughs
 
+Here is a general walkthrough, but below are short gif walkthrough for different features
+
+![Walkthrough](twitter.gif)
+
 #### Here are a few walkthroughs highlighting various user stories:
 
 Home Timeline of Tweets (Endless Scroll and Links)
